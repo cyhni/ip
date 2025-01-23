@@ -16,4 +16,6 @@ public final class DesignConstants {
       |   | ,'   |  ,   /  ---`-'  ---`-'     :  \\  \\ 
       `----'      ---`-'                       \\  ' ; 
                                                 `--`  """;
+
+    public static final String HORIZONTALLINE_STRING = "------------------------------------------------";
 }
