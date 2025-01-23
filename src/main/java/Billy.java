@@ -15,8 +15,18 @@ public class Billy {
             if (userCmd.equals("bye")) {
                 break;
             }
-
-            Billy.parseCommand(userCmd);
+            try {
+                Billy.parseCommand(userCmd);
+            } catch (BillyUnkownTaskNumException e) {
+                System.out.println(e.getMessage());
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            } catch (BillyFieldErrorException e) {
+                System.out.println(e.getMessage());
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            } catch (BillyUnknownException e) {
+                System.out.println(e.getMessage());
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            }
         }
         scanner.close();
         Billy.bye();
@@ -35,7 +45,7 @@ public class Billy {
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    private static void parseCommand(String userCmd) {
+    private static void parseCommand (String userCmd) throws BillyUnknownException, BillyFieldErrorException, BillyUnkownTaskNumException {
         String[] splitCmd = userCmd.split(" ");
 
         switch (splitCmd[0]) {
@@ -43,6 +53,11 @@ public class Billy {
                 Billy.list();
                 break;
             case "mark":
+                if (splitCmd.length == 1) {
+                    throw new BillyFieldErrorException("mark");
+                } else if (Integer.parseInt(splitCmd[1]) > counter) {
+                    throw new BillyUnkownTaskNumException(splitCmd[1]);
+                }
                 tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsDone();
 
                 System.out.println("\nMarked as done:\n" 
@@ -50,6 +65,11 @@ public class Billy {
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
                 break;
             case "unmark":
+                if (splitCmd.length == 1) {
+                    throw new BillyFieldErrorException("mark");
+                } else if (Integer.parseInt(splitCmd[1]) > counter) {
+                    throw new BillyUnkownTaskNumException(splitCmd[1]);
+                }
                 tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsUndone();
 
                 System.out.println("\nMarked as undone:\n" 
@@ -57,6 +77,9 @@ public class Billy {
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
                 break;
             case "todo":
+                if (splitCmd.length == 1) {
+                    throw new BillyFieldErrorException("todo");
+                }
                 tasklist[counter] = new Todo(userCmd);
                 counter++;
 
@@ -64,26 +87,43 @@ public class Billy {
                 break;
             case "deadline":
                 String[] deadlineSplit = userCmd.split(" /by ");
-                tasklist[counter] = new Deadline(deadlineSplit[0].substring(splitCmd[0].length() + 1), deadlineSplit[1]);
+                if (deadlineSplit.length <= 1) {
+                    throw new BillyFieldErrorException("deadline");
+                }
+                String deadlineDescription = deadlineSplit[0].substring(splitCmd[0].length() + 1);
+                String deadlineDate = deadlineSplit[1];
+
+                if (deadlineDescription.equals("") || deadlineDate.equals("")) {
+                    throw new BillyFieldErrorException("deadline");
+                }
+
+                tasklist[counter] = new Deadline(deadlineDescription, deadlineDate);
                 counter++;
 
                 taskAdderPrinter(tasklist[counter - 1]);
                 break;
             case "event":
                 String[] eventSplit = userCmd.split(" /from ");
-                String[] eventSplit2 = eventSplit[1].split(" /to ");
-                tasklist[counter] = new Event(eventSplit[0].substring(splitCmd[0].length() + 1)
-                                        , eventSplit[1].substring(0, eventSplit[1].length() - eventSplit2[1].length() - 5)
-                                        , eventSplit2[1]);
+                String[] eventSplit2 = userCmd.split(" /to ");
+                if (eventSplit.length <= 1 || eventSplit2.length <= 1) {
+                    throw new BillyFieldErrorException("event");
+                }
+
+                String eventDescription = eventSplit[0].substring(splitCmd[0].length() + 1);
+                String eventFrom = eventSplit[1].substring(0, eventSplit[1].length() - eventSplit2[1].length() - 5);
+                String eventTo = eventSplit2[1];
+
+                if (eventDescription.equals("") || eventFrom.equals("") || eventTo.equals("")) {
+                    throw new BillyFieldErrorException("event");
+                }
+
+                tasklist[counter] = new Event(eventDescription, eventFrom, eventTo);
                 counter++;
 
                 taskAdderPrinter(tasklist[counter - 1]);
                 break;
             default:
-                tasklist[counter] = new Task(userCmd);
-                counter++;
-
-                taskAdderPrinter(tasklist[counter - 1]);
+                throw new BillyUnknownException();
         }
     }
 
