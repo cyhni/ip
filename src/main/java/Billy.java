@@ -2,7 +2,7 @@ import constants.DesignConstants;
 import java.util.Scanner;
 
 public class Billy {
-    private static String[] list = new String[100];  
+    private static Task[] tasklist = new Task[100];  
     private static int counter = 0;
     public static void main(String[] args) {
         Billy.introduction();
@@ -36,13 +36,26 @@ public class Billy {
     }
 
     private static void parseCommand(String userCmd) {
+        String[] splitCmd = userCmd.split(" ");
 
-        switch (userCmd) {
+        switch (splitCmd[0]) {
             case "list":
                 Billy.list();
                 break;
+            case "mark":
+                tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsDone();
+                System.out.println("\nMarked as done:\n" 
+                    + (Integer.parseInt(splitCmd[1])) + ". " + tasklist[Integer.parseInt(splitCmd[1]) - 1] + "\n");
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+                break;
+            case "unmark":
+                tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsUndone();
+                System.out.println("\nMarked as undone:\n" 
+                    + (Integer.parseInt(splitCmd[1])) + ". " + tasklist[Integer.parseInt(splitCmd[1]) - 1] + "\n");
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+                break;
             default:
-                list[counter] = userCmd;
+                tasklist[counter] = new Task(userCmd);
                 counter++;
                 System.out.println("\nAdded to the list: " + userCmd + "\n");
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
@@ -52,7 +65,7 @@ public class Billy {
     private static void list() {
         System.out.println("\nHere are the items in your list:");
         for (int i = 0; i < counter; i++) {
-            System.out.println((i + 1) + ". " + list[i]);
+            System.out.println((i + 1) + ". " + tasklist[i]);
         }
         System.out.println();
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
