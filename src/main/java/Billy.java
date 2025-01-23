@@ -44,21 +44,46 @@ public class Billy {
                 break;
             case "mark":
                 tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsDone();
+
                 System.out.println("\nMarked as done:\n" 
                     + (Integer.parseInt(splitCmd[1])) + ". " + tasklist[Integer.parseInt(splitCmd[1]) - 1] + "\n");
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
                 break;
             case "unmark":
                 tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsUndone();
+
                 System.out.println("\nMarked as undone:\n" 
                     + (Integer.parseInt(splitCmd[1])) + ". " + tasklist[Integer.parseInt(splitCmd[1]) - 1] + "\n");
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
                 break;
+            case "todo":
+                tasklist[counter] = new Todo(userCmd);
+                counter++;
+
+                taskAdderPrinter(tasklist[counter - 1]);
+                break;
+            case "deadline":
+                String[] deadlineSplit = userCmd.split(" /by ");
+                tasklist[counter] = new Deadline(deadlineSplit[0].substring(splitCmd[0].length() + 1), deadlineSplit[1]);
+                counter++;
+
+                taskAdderPrinter(tasklist[counter - 1]);
+                break;
+            case "event":
+                String[] eventSplit = userCmd.split(" /from ");
+                String[] eventSplit2 = eventSplit[1].split(" /to ");
+                tasklist[counter] = new Event(eventSplit[0].substring(splitCmd[0].length() + 1)
+                                        , eventSplit[1].substring(0, eventSplit[1].length() - eventSplit2[1].length() - 5)
+                                        , eventSplit2[1]);
+                counter++;
+
+                taskAdderPrinter(tasklist[counter - 1]);
+                break;
             default:
                 tasklist[counter] = new Task(userCmd);
                 counter++;
-                System.out.println("\nAdded to the list: " + userCmd + "\n");
-                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+
+                taskAdderPrinter(tasklist[counter - 1]);
         }
     }
 
@@ -68,6 +93,12 @@ public class Billy {
             System.out.println((i + 1) + ". " + tasklist[i]);
         }
         System.out.println();
+        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+    }
+
+    private static void taskAdderPrinter(Task task) {
+        System.out.println("\nAdded to the list:\n" + counter + ". " + task + "\n");
+        System.out.println("There are currently " + counter + " tasks in the list.\n");
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
 }
