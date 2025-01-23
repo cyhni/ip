@@ -1,8 +1,10 @@
 import constants.DesignConstants;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Billy {
-    private static Task[] tasklist = new Task[100];  
+    private static ArrayList<Task> tasklist = new ArrayList<>();  
     private static int counter = 0;
     public static void main(String[] args) {
         Billy.introduction();
@@ -52,42 +54,46 @@ public class Billy {
             case "list":
                 Billy.list();
                 break;
+
             case "mark":
                 if (splitCmd.length == 1) {
                     throw new BillyFieldErrorException("mark");
                 } else if (Integer.parseInt(splitCmd[1]) > counter) {
                     throw new BillyUnkownTaskNumException(splitCmd[1]);
                 }
-                tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsDone();
+                tasklist.get(Integer.parseInt(splitCmd[1]) - 1).markAsDone();
 
                 System.out.println("\nMarked as done:\n" 
-                    + (Integer.parseInt(splitCmd[1])) + ". " + tasklist[Integer.parseInt(splitCmd[1]) - 1] + "\n");
+                    + (Integer.parseInt(splitCmd[1])) + ". " + tasklist.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
                 break;
+
             case "unmark":
                 if (splitCmd.length == 1) {
                     throw new BillyFieldErrorException("mark");
                 } else if (Integer.parseInt(splitCmd[1]) > counter) {
                     throw new BillyUnkownTaskNumException(splitCmd[1]);
                 }
-                tasklist[Integer.parseInt(splitCmd[1]) - 1].markAsUndone();
+                tasklist.get(Integer.parseInt(splitCmd[1]) - 1).markAsUndone();
 
                 System.out.println("\nMarked as undone:\n" 
-                    + (Integer.parseInt(splitCmd[1])) + ". " + tasklist[Integer.parseInt(splitCmd[1]) - 1] + "\n");
+                    + (Integer.parseInt(splitCmd[1])) + ". " + tasklist.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
                 break;
+
             case "todo":
                 if (splitCmd.length == 1) {
                     throw new BillyFieldErrorException("todo");
                 }
-                tasklist[counter] = new Todo(userCmd);
+                tasklist.add(new Todo(userCmd));
                 counter++;
 
-                taskAdderPrinter(tasklist[counter - 1]);
+                taskAdderPrinter(tasklist.get(counter - 1));
                 break;
+
             case "deadline":
                 String[] deadlineSplit = userCmd.split(" /by ");
-                if (deadlineSplit.length <= 1) {
+                if (deadlineSplit.length <= 1 || deadlineSplit[0].length() == splitCmd[0].length()) {
                     throw new BillyFieldErrorException("deadline");
                 }
                 String deadlineDescription = deadlineSplit[0].substring(splitCmd[0].length() + 1);
@@ -97,15 +103,16 @@ public class Billy {
                     throw new BillyFieldErrorException("deadline");
                 }
 
-                tasklist[counter] = new Deadline(deadlineDescription, deadlineDate);
+                tasklist.add(new Deadline(deadlineDescription, deadlineDate));
                 counter++;
 
-                taskAdderPrinter(tasklist[counter - 1]);
+                taskAdderPrinter(tasklist.get(counter - 1));
                 break;
+
             case "event":
                 String[] eventSplit = userCmd.split(" /from ");
                 String[] eventSplit2 = userCmd.split(" /to ");
-                if (eventSplit.length <= 1 || eventSplit2.length <= 1) {
+                if (eventSplit.length <= 1 || eventSplit2.length <= 1 || eventSplit[0].length() == splitCmd[0].length()) {
                     throw new BillyFieldErrorException("event");
                 }
 
@@ -117,11 +124,26 @@ public class Billy {
                     throw new BillyFieldErrorException("event");
                 }
 
-                tasklist[counter] = new Event(eventDescription, eventFrom, eventTo);
+                tasklist.add(new Event(eventDescription, eventFrom, eventTo));
                 counter++;
 
-                taskAdderPrinter(tasklist[counter - 1]);
+                taskAdderPrinter(tasklist.get(counter - 1));
                 break;
+
+            case "delete":
+                if (splitCmd.length == 1) {
+                    throw new BillyFieldErrorException("delete");
+                } else if (Integer.parseInt(splitCmd[1]) > counter) {
+                    throw new BillyUnkownTaskNumException(splitCmd[1]);
+                }
+                Task deletedTask = tasklist.get(Integer.parseInt(splitCmd[1]) - 1);
+                tasklist.remove(Integer.parseInt(splitCmd[1]) - 1);
+                counter--;
+                System.out.println("\nRemoved from the list:\n" + splitCmd[1] + ". " + deletedTask + "\n");
+                System.out.println("There are currently " + counter + " task(s) in the list.\n");
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+                break;
+                
             default:
                 throw new BillyUnknownException();
         }
@@ -130,7 +152,7 @@ public class Billy {
     private static void list() {
         System.out.println("\nHere are the items in your list:");
         for (int i = 0; i < counter; i++) {
-            System.out.println((i + 1) + ". " + tasklist[i]);
+            System.out.println((i + 1) + ". " + tasklist.get(i));
         }
         System.out.println();
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
@@ -138,7 +160,7 @@ public class Billy {
 
     private static void taskAdderPrinter(Task task) {
         System.out.println("\nAdded to the list:\n" + counter + ". " + task + "\n");
-        System.out.println("There are currently " + counter + " tasks in the list.\n");
+        System.out.println("There are currently " + counter + " task(s) in the list.\n");
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
 }
