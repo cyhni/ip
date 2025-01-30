@@ -19,6 +19,10 @@ public class Task {
         return (this.isDone ? "X" : " ");
     }
 
+    public String getFileDescriptor() {
+        return (this.isDone ? "1" : "0") + " | " + this.description;
+    }
+
     @Override
     public String toString() {
         return "[" + this.getStatusIcon() + "] " + this.description;
