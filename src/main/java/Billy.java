@@ -2,12 +2,20 @@ import constants.DesignConstants;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
 import java.io.File;
 import java.io.IOException;
+
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Billy {
     private static ArrayList<Task> tasklist = new ArrayList<>();  
     private static int counter = 0;
+
+    private static final Pattern DATETIME_PATTERN = Pattern.compile("\\d{2}-\\d{2}\\-\\d{4} \\d{4}");
     public static void main(String[] args) {
         try {
             startUp();
@@ -37,6 +45,9 @@ public class Billy {
                 System.out.println(e.getMessage());
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
             } catch (BillyUnknownException e) {
+                System.out.println(e.getMessage());
+                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            } catch (DateTimeException e) {
                 System.out.println(e.getMessage());
                 System.out.println(DesignConstants.HORIZONTALLINE_STRING);
             }
@@ -72,10 +83,10 @@ public class Billy {
                 tasklist.add(new Todo(splitLine[2]));
                 break;
             case "D":
-                tasklist.add(new Deadline(splitLine[2], splitLine[3]));
+                tasklist.add(new Deadline(splitLine[2], dateParsing(splitLine[3])));
                 break;
             case "E":
-                tasklist.add(new Event(splitLine[2], splitLine[3], splitLine[4]));
+                tasklist.add(new Event(splitLine[2], dateParsing(splitLine[3]), dateParsing(splitLine[4])));
                 break;
             default:
                 break;
@@ -100,7 +111,7 @@ public class Billy {
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    private static void parseCommand (String userCmd) throws BillyUnknownException, BillyFieldErrorException, BillyUnkownTaskNumException {
+    private static void parseCommand (String userCmd) throws BillyUnknownException, BillyFieldErrorException, BillyUnkownTaskNumException, DateTimeException {
         String[] splitCmd = userCmd.split(" ");
 
         switch (splitCmd[0]) {
@@ -157,8 +168,13 @@ public class Billy {
             if (deadlineDescription.equals("") || deadlineDate.equals("")) {
                 throw new BillyFieldErrorException("deadline");
             }
+    
+            LocalDateTime deadlineParsedDate = dateParsing(deadlineDate);
+            if (deadlineParsedDate == null) {
+                throw new DateTimeException("Billy does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...");
+            }
 
-            tasklist.add(new Deadline(deadlineDescription, deadlineDate));
+            tasklist.add(new Deadline(deadlineDescription, deadlineParsedDate));
             counter++;
             Billy.updateFile(tasklist.get(counter - 1));
             taskAdderPrinter(tasklist.get(counter - 1));
@@ -180,7 +196,15 @@ public class Billy {
                 throw new BillyFieldErrorException("event");
             }
 
-            tasklist.add(new Event(eventDescription, eventFrom, eventTo));
+            LocalDateTime eventParsedFrom = dateParsing(eventFrom);
+            LocalDateTime eventParsedTo = dateParsing(eventTo);
+            if (eventParsedFrom == null || eventParsedTo == null) {
+                throw new DateTimeException("Billy does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...");
+            } else if (eventParsedFrom.isAfter(eventParsedTo)) {
+                throw new DateTimeException("Please ensure that the start date is before the end date...");
+            }
+
+            tasklist.add(new Event(eventDescription, eventParsedFrom, eventParsedTo));
             counter++;
 
             Billy.updateFile(tasklist.get(counter - 1));
@@ -247,6 +271,14 @@ public class Billy {
             System.out.println(e.getMessage());
             System.out.println(DesignConstants.HORIZONTALLINE_STRING);
         }
+    }
+
+    private static LocalDateTime dateParsing(String date) {
+        LocalDateTime parsedDate = null;
+        if (DATETIME_PATTERN.matcher(date).matches()) {
+            parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"));
+        }
+        return parsedDate;
     }
 
     private static void taskAdderPrinter(Task task) {
