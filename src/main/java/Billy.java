@@ -167,7 +167,8 @@ public class Billy {
         case "event":
             String[] eventSplit = userCmd.split(" /from ");
             String[] eventSplit2 = userCmd.split(" /to ");
-            if (eventSplit.length <= 1 || eventSplit2.length <= 1 || eventSplit[0].length() == splitCmd[0].length()) {
+            String[] eventSplitCheck = eventSplit[1].split(" /to ");
+            if (eventSplit.length <= 1 || eventSplit2.length <= 1 || eventSplit[0].length() == splitCmd[0].length() || eventSplitCheck.length == 1) {
                 throw new BillyFieldErrorException("event");
             }
 
