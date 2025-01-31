@@ -1,6 +1,6 @@
-public class BillyFieldErrorException extends Exception {
+public class BillyFieldErrorException extends BillyException {
     public BillyFieldErrorException(String command) {
-        super("\nIncorrect fields for " + command + " function...\n\nBilly is confused!!!\n");
+        super("Incorrect fields for " + command + " function...\n\nBilly is confused!!!");
     }
     
 }

@@ -1,5 +1,5 @@
-public class BillyUnknownException extends Exception {
+public class BillyUnknownException extends BillyException {
     public BillyUnknownException() {
-        super("\nBilly does not know what you are talking about...\n");
+        super("Billy does not know what you are talking about...");
     }
 }

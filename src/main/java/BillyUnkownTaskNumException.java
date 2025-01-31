@@ -1,6 +1,6 @@
-public class BillyUnkownTaskNumException extends Exception {
+public class BillyUnkownTaskNumException extends BillyException {
     public BillyUnkownTaskNumException(String index) {
-        super("\nBilly does not have task number " + index + "...\n");
+        super("Billy does not have task number " + index + "...");
     }
     
 }
