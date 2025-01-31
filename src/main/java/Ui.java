@@ -39,12 +39,12 @@ public class Ui {
                 DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    public final void printList(ArrayList<Task> tasksList, int counter) {
+    public final void printList(ArrayList<Task> tasksList) {
         printToUser("\nHere are the items in your list:");
-        for (int i = 0; i < counter; i++) {
+        for (int i = 0; i < tasksList.size(); i++) {
             printToUser((i + 1) + ". " + tasksList.get(i));
         }
-        printToUser("\n", DesignConstants.HORIZONTALLINE_STRING);
+        printToUser("", DesignConstants.HORIZONTALLINE_STRING);
     }
 
     public final void printTaskAdded(Task task, int counter) {
