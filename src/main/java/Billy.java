@@ -12,57 +12,53 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Billy {
-    private static ArrayList<Task> tasksList = new ArrayList<>();  
-    private static int counter = 0;
+    private ArrayList<Task> tasksList; 
+    private int counter;
+    private Ui ui;
 
     private static final Pattern DATETIME_PATTERN = Pattern.compile("\\d{2}-\\d{2}\\-\\d{4} \\d{4}");
-    public static void main(String[] args) {
+
+    public Billy() {
+        this.ui = new Ui();
+        this.tasksList = new ArrayList<>();
+        this.counter = 0;
         try {
-            startUp();
-        } catch (IOException e) {
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            System.out.println(e.getMessage());
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            Billy.printBye();
-            System.exit(0);
+            this.startUp();
+        } catch (IOException | SecurityException e) {
+            ui.printLine();
+            ui.printError(e.getMessage());
         }
-        Billy.printIntroduction();
-        Scanner scanner = new Scanner(System.in);
+    }
+
+    public void run() {
+        ui.printIntroduction();
         while (true) {
-            System.out.print("Enter your command: ");
-            String userCmd = scanner.nextLine();
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            String userCmd = ui.readCommand();
+            ui.printLine();
 
             if (userCmd.equals("bye")) {
                 break;
             }
             try {
-                Billy.parseCommand(userCmd);
-            } catch (BillyUnkownTaskNumException e) {
-                System.out.println(e.getMessage());
-                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            } catch (BillyFieldErrorException e) {
-                System.out.println(e.getMessage());
-                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            } catch (BillyUnknownException e) {
-                System.out.println(e.getMessage());
-                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            } catch (DateTimeException e) {
-                System.out.println(e.getMessage());
-                System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+                parseCommand(userCmd);
+            } catch (BillyException | DateTimeException e) {
+                ui.printError(e.getMessage());
             }
         }
-        scanner.close();
-        Billy.printBye();
+        ui.printBye();
     }
 
-    private static void startUp() throws IOException {
+    public static void main(String[] args) {
+        new Billy().run();
+    }
+
+    private void startUp() throws IOException {
         File file = new File("./src/main/java/data/billy.txt");
         if (!file.getParentFile().exists()) {
             try {
                 file.getParentFile().mkdir();
-            } catch (Exception e) {
-                throw new IOException("Billy failed to create directory...");
+            } catch (SecurityException e) {
+                throw e;
             }
         }
 
@@ -70,7 +66,7 @@ public class Billy {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw new IOException("Billy failed to create file...");
+                throw e;
             }
         }
 
@@ -99,25 +95,12 @@ public class Billy {
         fileScanner.close();
     }
 
-    private final static void printIntroduction() {
-        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-        System.out.println(DesignConstants.LOGO_STRING);
-        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-        System.out.println("\nWelcome to the world of Billy!\n" + "How can I help you?\n");
-        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-    }
-
-    private final static void printBye() {
-        System.out.println("\nBye bye.\n");
-        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-    }
-
-    private static void parseCommand (String userCmd) throws BillyUnknownException, BillyFieldErrorException, BillyUnkownTaskNumException, DateTimeException {
+    private void parseCommand (String userCmd) throws BillyUnknownException, BillyFieldErrorException, BillyUnkownTaskNumException, DateTimeException {
         String[] splitCmd = userCmd.split(" ");
 
         switch (splitCmd[0]) {
         case "list":
-            Billy.printList();
+            ui.printList(tasksList, counter);
             break;
 
         case "mark":
@@ -127,11 +110,11 @@ public class Billy {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
             tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsDone();
-            Billy.updateFile();
+            updateFile();
 
-            System.out.println("\nMarked as done:\n" 
+            ui.printToUser("\nMarked as done:\n" 
                 + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            ui.printLine();
             break;
 
         case "unmark":
@@ -141,11 +124,11 @@ public class Billy {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
             tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsUndone();
-            Billy.updateFile();
+            updateFile();
 
-            System.out.println("\nMarked as undone:\n" 
+            ui.printToUser("\nMarked as undone:\n" 
                 + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            ui.printLine();
             break;
 
         case "todo":
@@ -154,8 +137,8 @@ public class Billy {
             }
             tasksList.add(new Todo(userCmd));
             counter++;
-            Billy.updateFile(tasksList.get(counter - 1));
-            printTaskAdded(tasksList.get(counter - 1));
+            updateFile(tasksList.get(counter - 1));
+            ui.printTaskAdded(tasksList.get(counter - 1), counter);
             break;
 
         case "deadline":
@@ -172,13 +155,13 @@ public class Billy {
     
             LocalDateTime deadlineParsedDate = dateParsing(deadlineDate);
             if (deadlineParsedDate == null) {
-                throw new DateTimeException("Billy does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...");
+                throw new DateTimeException("\nBilly does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...\n");
             }
 
             tasksList.add(new Deadline(deadlineDescription, deadlineParsedDate));
             counter++;
-            Billy.updateFile(tasksList.get(counter - 1));
-            printTaskAdded(tasksList.get(counter - 1));
+            updateFile(tasksList.get(counter - 1));
+            ui.printTaskAdded(tasksList.get(counter - 1), counter);
             break;
 
         case "event":
@@ -208,8 +191,8 @@ public class Billy {
             tasksList.add(new Event(eventDescription, eventParsedFrom, eventParsedTo));
             counter++;
 
-            Billy.updateFile(tasksList.get(counter - 1));
-            printTaskAdded(tasksList.get(counter - 1));
+            updateFile(tasksList.get(counter - 1));
+            ui.printTaskAdded(tasksList.get(counter - 1), counter);
             break;
 
         case "delete":
@@ -221,10 +204,10 @@ public class Billy {
             Task deletedTask = tasksList.get(Integer.parseInt(splitCmd[1]) - 1);
             tasksList.remove(Integer.parseInt(splitCmd[1]) - 1);
             counter--;
-            Billy.updateFile();
-            System.out.println("\nRemoved from the list:\n" + splitCmd[1] + ". " + deletedTask + "\n");
-            System.out.println("There are currently " + counter + " task(s) in the list.\n");
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            updateFile();
+            ui.printToUser("\nRemoved from the list:\n" + splitCmd[1] + ". " + deletedTask + "\n",
+                    "There are currently " + counter + " task(s) in the list.\n");
+            ui.printLine();
             break;
             
         default:
@@ -232,59 +215,42 @@ public class Billy {
         }
     }
 
-    private static void printList() {
-        System.out.println("\nHere are the items in your list:");
-        for (int i = 0; i < counter; i++) {
-            System.out.println((i + 1) + ". " + tasksList.get(i));
-        }
-        System.out.println();
-        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-    }
-
-    private static void updateFile(Task task) {
+    private void updateFile(Task task) {
         File file = new File("./src/main/java/data/billy.txt");
         try {
             java.io.FileWriter fileWriter = new java.io.FileWriter(file, true);
             fileWriter.write(task.getFileDescriptor() + "\n");
             fileWriter.close();
         } catch (IOException e) {
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            System.out.println(e.getMessage());
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            ui.printLine();
+            ui.printError(e.getMessage());
         }
     }
 
-    private static void updateFile() {
+    private void updateFile() {
         deleteFile();
         for (int i = 0; i < counter; i++) {
             updateFile(tasksList.get(i));
         }
     }
 
-    private static void deleteFile() {
+    private void deleteFile() {
         File file = new File("./src/main/java/data/billy.txt");
         try {
             java.io.FileWriter fileWriter = new java.io.FileWriter(file, false);
             fileWriter.write("");
             fileWriter.close();
         } catch (IOException e) {
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            System.out.println(e.getMessage());
-            System.out.println(DesignConstants.HORIZONTALLINE_STRING);
+            ui.printLine();
+            ui.printError(e.getMessage());
         }
     }
 
-    private static LocalDateTime dateParsing(String date) {
+    private LocalDateTime dateParsing(String date) {
         LocalDateTime parsedDate = null;
         if (DATETIME_PATTERN.matcher(date).matches()) {
             parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"));
         }
         return parsedDate;
-    }
-
-    private static void printTaskAdded(Task task) {
-        System.out.println("\nAdded to the list:\n" + counter + ". " + task + "\n");
-        System.out.println("There are currently " + counter + " task(s) in the list.\n");
-        System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
 }
