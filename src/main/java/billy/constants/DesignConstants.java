@@ -1,4 +1,4 @@
-package constants;
+package billy.constants;
 
 public final class DesignConstants {
     public static final String LOGO_STRING = """

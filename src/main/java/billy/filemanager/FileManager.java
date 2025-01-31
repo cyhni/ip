@@ -1,8 +1,17 @@
+package billy.filemanager;
+
 import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import billy.parser.Parser;
+
+import billy.tasks.Deadline;
+import billy.tasks.Event;
+import billy.tasks.Task;
+import billy.tasks.Todo;
 
 public class FileManager {
     private static String PATH_NAME = "./src/main/java/data/billy.txt";
