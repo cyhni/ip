@@ -1,7 +1,11 @@
-import constants.DesignConstants;
+package billy.ui;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import billy.constants.DesignConstants;
+
+import billy.tasks.Task;
 
 public class Ui {
     private final Scanner scanner;
