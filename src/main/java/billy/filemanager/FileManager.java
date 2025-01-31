@@ -2,19 +2,17 @@ package billy.filemanager;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import billy.parser.Parser;
-
 import billy.tasks.Deadline;
 import billy.tasks.Event;
 import billy.tasks.Task;
 import billy.tasks.Todo;
 
 public class FileManager {
-    private static String PATH_NAME = "./src/main/java/data/billy.txt";
+    private static final String PATH_NAME = "./src/main/java/data/billy.txt";
 
     public void startUp(ArrayList<Task> tasksList) throws IOException {
         File file = new File(PATH_NAME);
@@ -46,7 +44,9 @@ public class FileManager {
                 tasksList.add(new Deadline(splitLine[2], Parser.dateParsing(splitLine[3])));
                 break;
             case "E":
-                tasksList.add(new Event(splitLine[2], Parser.dateParsing(splitLine[3]), Parser.dateParsing(splitLine[4])));
+                tasksList.add(new Event(splitLine[2],
+                        Parser.dateParsing(splitLine[3]),
+                        Parser.dateParsing(splitLine[4])));
                 break;
             default:
                 break;

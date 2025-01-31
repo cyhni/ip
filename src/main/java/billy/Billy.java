@@ -1,21 +1,17 @@
-import java.util.ArrayList;
+package billy;
 
 import java.io.IOException;
-
 import java.time.DateTimeException;
+import java.util.ArrayList;
 
 import billy.exceptions.BillyException;
-
 import billy.filemanager.FileManager;
-
 import billy.parser.Parser;
-
 import billy.tasks.Task;
-
 import billy.ui.Ui;
 
 public class Billy {
-    private ArrayList<Task> tasksList; 
+    private ArrayList<Task> tasksList;
     private Ui ui;
     private FileManager fileManager;
 

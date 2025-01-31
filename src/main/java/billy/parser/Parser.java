@@ -1,31 +1,32 @@
 package billy.parser;
 
 import java.io.IOException;
-
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import billy.exceptions.BillyFieldErrorException;
+import billy.exceptions.BillyUnknownException;
+import billy.exceptions.BillyUnkownTaskNumException;
 import billy.filemanager.FileManager;
 import billy.tasks.Deadline;
 import billy.tasks.Event;
 import billy.tasks.Task;
 import billy.tasks.Todo;
 import billy.ui.Ui;
-import billy.exceptions.BillyFieldErrorException;
-import billy.exceptions.BillyUnknownException;
-import billy.exceptions.BillyUnkownTaskNumException;
 
 public class Parser {
     private static final Pattern DATETIME_PATTERN = Pattern.compile("\\d{2}-\\d{2}\\-\\d{4} \\d{4}");
 
-    public static void parseCommand(String userCmd, ArrayList<Task> tasksList, Ui ui, FileManager fileManager) 
-            throws BillyUnknownException, BillyFieldErrorException, BillyUnkownTaskNumException, DateTimeException, IOException {
+    public static void parseCommand(String userCmd, ArrayList<Task> tasksList, Ui ui, FileManager fileManager)
+            throws BillyUnknownException,
+            BillyFieldErrorException,
+            BillyUnkownTaskNumException,
+            DateTimeException,
+            IOException {
         String[] splitCmd = userCmd.split(" ");
-
         switch (splitCmd[0]) {
         case "list":
             ui.printList(tasksList);
@@ -39,8 +40,7 @@ public class Parser {
             }
             tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsDone();
             fileManager.updateFile(tasksList);
-
-            ui.printToUser("\nMarked as done:\n" 
+            ui.printToUser("\nMarked as done:\n"
                 + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
             ui.printLine();
             break;
@@ -53,8 +53,7 @@ public class Parser {
             }
             tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsUndone();
             fileManager.updateFile(tasksList);
-
-            ui.printToUser("\nMarked as undone:\n" 
+            ui.printToUser("\nMarked as undone:\n"
                 + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
             ui.printLine();
             break;
@@ -79,10 +78,10 @@ public class Parser {
             if (deadlineDescription.equals("") || deadlineDate.equals("")) {
                 throw new BillyFieldErrorException("deadline");
             }
-    
             LocalDateTime deadlineParsedDate = dateParsing(deadlineDate);
             if (deadlineParsedDate == null) {
-                throw new DateTimeException("\nBilly does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...\n");
+                throw new DateTimeException("\nBilly does not understand the date format..."
+                        + "\nPlease use dd-MM-yyyy HHmm format...\n");
             }
 
             tasksList.add(new Deadline(deadlineDescription, deadlineParsedDate));
@@ -94,7 +93,10 @@ public class Parser {
             String[] eventSplit = userCmd.split(" /from ");
             String[] eventSplit2 = userCmd.split(" /to ");
             String[] eventSplitCheck = eventSplit[1].split(" /to ");
-            if (eventSplit.length <= 1 || eventSplit2.length <= 1 || eventSplit[0].length() == splitCmd[0].length() || eventSplitCheck.length == 1) {
+            if (eventSplit.length <= 1
+                    || eventSplit2.length <= 1
+                    || eventSplit[0].length() == splitCmd[0].length()
+                    || eventSplitCheck.length == 1) {
                 throw new BillyFieldErrorException("event");
             }
 
@@ -109,13 +111,14 @@ public class Parser {
             LocalDateTime eventParsedFrom = dateParsing(eventFrom);
             LocalDateTime eventParsedTo = dateParsing(eventTo);
             if (eventParsedFrom == null || eventParsedTo == null) {
-                throw new DateTimeException("Billy does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...");
+                throw new DateTimeException("\nBilly does not understand the date format..."
+                        + "\nPlease use dd-MM-yyyy HHmm format...\n");
             } else if (eventParsedFrom.isAfter(eventParsedTo)) {
                 throw new DateTimeException("Please ensure that the start date is before the end date...");
             }
 
             tasksList.add(new Event(eventDescription, eventParsedFrom, eventParsedTo));
-            
+
             fileManager.updateFile(tasksList.get(tasksList.size() - 1));
             ui.printTaskAdded(tasksList.get(tasksList.size() - 1), tasksList.size());
             break;
@@ -133,7 +136,6 @@ public class Parser {
                     "There are currently " + tasksList.size() + " task(s) in the list.\n");
             ui.printLine();
             break;
-            
         default:
             throw new BillyUnknownException();
         }

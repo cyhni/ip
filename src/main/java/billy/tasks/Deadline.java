@@ -3,10 +3,9 @@ package billy.tasks;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 public class Deadline extends Task {
-    private final DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm");
     protected LocalDateTime by;
+    private final DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm");
 
     public Deadline(String description, LocalDateTime by) {
         super(description);
@@ -22,5 +21,4 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + super.toString() + "\n\t\tby: " + this.by.format(formatterDateTime);
     }
-    
 }
