@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Billy {
-    private static ArrayList<Task> tasklist = new ArrayList<>();  
+    private static ArrayList<Task> tasksList = new ArrayList<>();  
     private static int counter = 0;
 
     private static final Pattern DATETIME_PATTERN = Pattern.compile("\\d{2}-\\d{2}\\-\\d{4} \\d{4}");
@@ -23,10 +23,10 @@ public class Billy {
             System.out.println(DesignConstants.HORIZONTALLINE_STRING);
             System.out.println(e.getMessage());
             System.out.println(DesignConstants.HORIZONTALLINE_STRING);
-            Billy.bye();
+            Billy.printBye();
             System.exit(0);
         }
-        Billy.introduction();
+        Billy.printIntroduction();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("Enter your command: ");
@@ -53,7 +53,7 @@ public class Billy {
             }
         }
         scanner.close();
-        Billy.bye();
+        Billy.printBye();
     }
 
     private static void startUp() throws IOException {
@@ -80,25 +80,26 @@ public class Billy {
             String[] splitLine = line.split(" \\| ");
             switch (splitLine[0]) {
             case "T":
-                tasklist.add(new Todo(splitLine[2]));
+                tasksList.add(new Todo(splitLine[2]));
                 break;
             case "D":
-                tasklist.add(new Deadline(splitLine[2], dateParsing(splitLine[3])));
+                tasksList.add(new Deadline(splitLine[2], dateParsing(splitLine[3])));
                 break;
             case "E":
-                tasklist.add(new Event(splitLine[2], dateParsing(splitLine[3]), dateParsing(splitLine[4])));
+                tasksList.add(new Event(splitLine[2], dateParsing(splitLine[3]), dateParsing(splitLine[4])));
                 break;
             default:
                 break;
             }
             if (splitLine[1].equals("1")) {
-                tasklist.get(counter).markAsDone();
+                tasksList.get(counter).markAsDone();
             }
             counter++;
         }
+        fileScanner.close();
     }
 
-    private final static void introduction() {
+    private final static void printIntroduction() {
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
         System.out.println(DesignConstants.LOGO_STRING);
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
@@ -106,7 +107,7 @@ public class Billy {
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    private final static void bye() {
+    private final static void printBye() {
         System.out.println("\nBye bye.\n");
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
     }
@@ -116,7 +117,7 @@ public class Billy {
 
         switch (splitCmd[0]) {
         case "list":
-            Billy.list();
+            Billy.printList();
             break;
 
         case "mark":
@@ -125,11 +126,11 @@ public class Billy {
             } else if (Integer.parseInt(splitCmd[1]) > counter) {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
-            tasklist.get(Integer.parseInt(splitCmd[1]) - 1).markAsDone();
+            tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsDone();
             Billy.updateFile();
 
             System.out.println("\nMarked as done:\n" 
-                + (Integer.parseInt(splitCmd[1])) + ". " + tasklist.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
+                + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
             System.out.println(DesignConstants.HORIZONTALLINE_STRING);
             break;
 
@@ -139,11 +140,11 @@ public class Billy {
             } else if (Integer.parseInt(splitCmd[1]) > counter) {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
-            tasklist.get(Integer.parseInt(splitCmd[1]) - 1).markAsUndone();
+            tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsUndone();
             Billy.updateFile();
 
             System.out.println("\nMarked as undone:\n" 
-                + (Integer.parseInt(splitCmd[1])) + ". " + tasklist.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
+                + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
             System.out.println(DesignConstants.HORIZONTALLINE_STRING);
             break;
 
@@ -151,10 +152,10 @@ public class Billy {
             if (splitCmd.length == 1) {
                 throw new BillyFieldErrorException("todo");
             }
-            tasklist.add(new Todo(userCmd));
+            tasksList.add(new Todo(userCmd));
             counter++;
-            Billy.updateFile(tasklist.get(counter - 1));
-            taskAdderPrinter(tasklist.get(counter - 1));
+            Billy.updateFile(tasksList.get(counter - 1));
+            printTaskAdded(tasksList.get(counter - 1));
             break;
 
         case "deadline":
@@ -174,10 +175,10 @@ public class Billy {
                 throw new DateTimeException("Billy does not understand the date format...\nPlease use dd-MM-yyyy HHmm format...");
             }
 
-            tasklist.add(new Deadline(deadlineDescription, deadlineParsedDate));
+            tasksList.add(new Deadline(deadlineDescription, deadlineParsedDate));
             counter++;
-            Billy.updateFile(tasklist.get(counter - 1));
-            taskAdderPrinter(tasklist.get(counter - 1));
+            Billy.updateFile(tasksList.get(counter - 1));
+            printTaskAdded(tasksList.get(counter - 1));
             break;
 
         case "event":
@@ -204,11 +205,11 @@ public class Billy {
                 throw new DateTimeException("Please ensure that the start date is before the end date...");
             }
 
-            tasklist.add(new Event(eventDescription, eventParsedFrom, eventParsedTo));
+            tasksList.add(new Event(eventDescription, eventParsedFrom, eventParsedTo));
             counter++;
 
-            Billy.updateFile(tasklist.get(counter - 1));
-            taskAdderPrinter(tasklist.get(counter - 1));
+            Billy.updateFile(tasksList.get(counter - 1));
+            printTaskAdded(tasksList.get(counter - 1));
             break;
 
         case "delete":
@@ -217,8 +218,8 @@ public class Billy {
             } else if (Integer.parseInt(splitCmd[1]) > counter) {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
-            Task deletedTask = tasklist.get(Integer.parseInt(splitCmd[1]) - 1);
-            tasklist.remove(Integer.parseInt(splitCmd[1]) - 1);
+            Task deletedTask = tasksList.get(Integer.parseInt(splitCmd[1]) - 1);
+            tasksList.remove(Integer.parseInt(splitCmd[1]) - 1);
             counter--;
             Billy.updateFile();
             System.out.println("\nRemoved from the list:\n" + splitCmd[1] + ". " + deletedTask + "\n");
@@ -231,10 +232,10 @@ public class Billy {
         }
     }
 
-    private static void list() {
+    private static void printList() {
         System.out.println("\nHere are the items in your list:");
         for (int i = 0; i < counter; i++) {
-            System.out.println((i + 1) + ". " + tasklist.get(i));
+            System.out.println((i + 1) + ". " + tasksList.get(i));
         }
         System.out.println();
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
@@ -256,7 +257,7 @@ public class Billy {
     private static void updateFile() {
         deleteFile();
         for (int i = 0; i < counter; i++) {
-            updateFile(tasklist.get(i));
+            updateFile(tasksList.get(i));
         }
     }
 
@@ -281,7 +282,7 @@ public class Billy {
         return parsedDate;
     }
 
-    private static void taskAdderPrinter(Task task) {
+    private static void printTaskAdded(Task task) {
         System.out.println("\nAdded to the list:\n" + counter + ". " + task + "\n");
         System.out.println("There are currently " + counter + " task(s) in the list.\n");
         System.out.println(DesignConstants.HORIZONTALLINE_STRING);
