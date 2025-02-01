@@ -33,6 +33,7 @@ public class Parser {
             IOException {
         Command command;
         String[] splitCmd = userCmd.split(" ");
+        
         switch (splitCmd[0]) {
         case "list":
             command = new ListCommand();
