@@ -5,9 +5,17 @@ import java.io.IOException;
 import billy.tasks.TasksList;
 import billy.ui.Ui;
 
+/**
+ * The MarkCommand class represents a command to mark a task as done.
+ */
 public class MarkCommand extends Command {
     private int taskNumber;
 
+    /**
+     * Constructs a MarkCommand object.
+     *
+     * @param taskNumber The index of the task to be marked as done.
+     */
     public MarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }

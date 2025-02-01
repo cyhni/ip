@@ -11,9 +11,21 @@ import billy.tasks.Event;
 import billy.tasks.Task;
 import billy.tasks.Todo;
 
+/**
+ * The FileManager class provides methods to manage tasks stored in a file.
+ * It allows reading tasks from a file, updating the file with new tasks,
+ * and rewriting the file with an updated list of tasks.
+ */
 public class FileManager {
     private static final String PATH_NAME = "./src/main/java/data/billy.txt";
 
+    /**
+     * Reads the file and initializes the tasks list.
+     * Method reads the file and initializes the {@code ArrayList<Task>} with the tasks in the file.
+     *
+     * @param tasksList The list of tasks to be initialized.
+     * @throws IOException If an I/O error occurs.
+     */
     public static void startUp(ArrayList<Task> tasksList) throws IOException {
         File file = new File(PATH_NAME);
         if (!file.getParentFile().exists()) {
@@ -58,6 +70,13 @@ public class FileManager {
         fileScanner.close();
     }
 
+    /**
+     * Updates the file with the task.
+     * Method appends the task to the file.
+     *
+     * @param task The task to be updated.
+     * @throws IOException If an I/O error occurs.
+     */
     public static void updateFile(Task task) throws IOException {
         File file = new File(PATH_NAME);
         try {
@@ -69,6 +88,13 @@ public class FileManager {
         }
     }
 
+    /**
+     * Updates the file with the tasks list.
+     * Method deletes the file and rewrites the tasks list to the file.
+     *
+     * @param tasksList The list of tasks to be updated.
+     * @throws IOException If an I/O error occurs.
+     */
     public static void updateFile(ArrayList<Task> tasksList) throws IOException {
         deleteFile();
         for (int i = 0; i < tasksList.size(); i++) {

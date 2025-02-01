@@ -6,10 +6,19 @@ import billy.tasks.Task;
 import billy.tasks.TasksList;
 import billy.ui.Ui;
 
+/**
+ * The DeleteCommand class represents a command to delete a task.
+ */
 public class DeleteCommand extends Command {
     private int index;
     private Task deletedTask;
 
+    /**
+     * Constructs a DeleteCommand object.
+     *
+     * @param index The index of the task to be deleted.
+     * @param deletedTask The task to be deleted.
+     */
     public DeleteCommand(int index, Task deletedTask) {
         this.index = index;
         this.deletedTask = deletedTask;
