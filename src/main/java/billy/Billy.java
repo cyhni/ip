@@ -2,26 +2,23 @@ package billy;
 
 import java.io.IOException;
 import java.time.DateTimeException;
-import java.util.ArrayList;
 
+import billy.command.Command;
 import billy.exceptions.BillyException;
 import billy.filemanager.FileManager;
 import billy.parser.Parser;
-import billy.tasks.Task;
+import billy.tasks.TasksList;
 import billy.ui.Ui;
 
 public class Billy {
-    private ArrayList<Task> tasksList;
+    private TasksList tasksList;
     private Ui ui;
-    private FileManager fileManager;
-
 
     public Billy() {
         this.ui = new Ui();
-        this.tasksList = new ArrayList<>();
-        this.fileManager = new FileManager();
+        this.tasksList = new TasksList();
         try {
-            fileManager.startUp(this.tasksList);
+            FileManager.startUp(this.tasksList.getTasksList());
         } catch (IOException | SecurityException e) {
             ui.printLine();
             ui.printError(e.getMessage());
@@ -38,7 +35,8 @@ public class Billy {
                 break;
             }
             try {
-                Parser.parseCommand(userCmd, tasksList, ui, fileManager);
+                Command c = Parser.parseCommand(userCmd, tasksList, ui);
+                c.execute(tasksList, ui);
             } catch (BillyException | DateTimeException | IOException e) {
                 ui.printError(e.getMessage());
             }

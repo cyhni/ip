@@ -4,67 +4,66 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import billy.command.Command;
+import billy.command.DeadlineCommand;
+import billy.command.DeleteCommand;
+import billy.command.EventCommand;
+import billy.command.ListCommand;
+import billy.command.MarkCommand;
+import billy.command.TodoCommand;
+import billy.command.UnmarkCommand;
+import billy.exceptions.BillyException;
 import billy.exceptions.BillyFieldErrorException;
 import billy.exceptions.BillyUnknownException;
 import billy.exceptions.BillyUnkownTaskNumException;
-import billy.filemanager.FileManager;
 import billy.tasks.Deadline;
 import billy.tasks.Event;
-import billy.tasks.Task;
+import billy.tasks.TasksList;
 import billy.tasks.Todo;
 import billy.ui.Ui;
 
 public class Parser {
     private static final Pattern DATETIME_PATTERN = Pattern.compile("\\d{2}-\\d{2}\\-\\d{4} \\d{4}");
 
-    public static void parseCommand(String userCmd, ArrayList<Task> tasksList, Ui ui, FileManager fileManager)
-            throws BillyUnknownException,
-            BillyFieldErrorException,
-            BillyUnkownTaskNumException,
+    public static Command parseCommand(String userCmd, TasksList tasksList, Ui ui)
+            throws BillyException,
             DateTimeException,
             IOException {
+        Command command;
         String[] splitCmd = userCmd.split(" ");
         switch (splitCmd[0]) {
         case "list":
-            ui.printList(tasksList);
+            command = new ListCommand();
             break;
 
         case "mark":
             if (splitCmd.length == 1) {
                 throw new BillyFieldErrorException("mark");
-            } else if (Integer.parseInt(splitCmd[1]) > tasksList.size()) {
+            } else if (Integer.parseInt(splitCmd[1]) > tasksList.getSize()) {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
-            tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsDone();
-            fileManager.updateFile(tasksList);
-            ui.printToUser("\nMarked as done:\n"
-                + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
-            ui.printLine();
+
+            command = new MarkCommand(Integer.parseInt(splitCmd[1]));
             break;
 
         case "unmark":
             if (splitCmd.length == 1) {
                 throw new BillyFieldErrorException("mark");
-            } else if (Integer.parseInt(splitCmd[1]) > tasksList.size()) {
+            } else if (Integer.parseInt(splitCmd[1]) > tasksList.getSize()) {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
-            tasksList.get(Integer.parseInt(splitCmd[1]) - 1).markAsUndone();
-            fileManager.updateFile(tasksList);
-            ui.printToUser("\nMarked as undone:\n"
-                + (Integer.parseInt(splitCmd[1])) + ". " + tasksList.get(Integer.parseInt(splitCmd[1]) - 1) + "\n");
-            ui.printLine();
+
+            command = new UnmarkCommand(Integer.parseInt(splitCmd[1]));
             break;
 
         case "todo":
             if (splitCmd.length == 1) {
                 throw new BillyFieldErrorException("todo");
             }
-            tasksList.add(new Todo(userCmd));
-            fileManager.updateFile(tasksList.get(tasksList.size() - 1));
-            ui.printTaskAdded(tasksList.get(tasksList.size() - 1), tasksList.size());
+
+            command = new TodoCommand(new Todo(userCmd.substring(splitCmd[0].length() + 1)));
             break;
 
         case "deadline":
@@ -72,21 +71,20 @@ public class Parser {
             if (deadlineSplit.length <= 1 || deadlineSplit[0].length() == splitCmd[0].length()) {
                 throw new BillyFieldErrorException("deadline");
             }
+
             String deadlineDescription = deadlineSplit[0].substring(splitCmd[0].length() + 1);
             String deadlineDate = deadlineSplit[1];
-
             if (deadlineDescription.equals("") || deadlineDate.equals("")) {
                 throw new BillyFieldErrorException("deadline");
             }
+
             LocalDateTime deadlineParsedDate = dateParsing(deadlineDate);
             if (deadlineParsedDate == null) {
-                throw new DateTimeException("\nBilly does not understand the date format..."
-                        + "\nPlease use dd-MM-yyyy HHmm format...\n");
+                throw new DateTimeException("Billy does not understand the date format..."
+                        + "\nPlease use dd-MM-yyyy HHmm format...");
             }
 
-            tasksList.add(new Deadline(deadlineDescription, deadlineParsedDate));
-            fileManager.updateFile(tasksList.get(tasksList.size() - 1));
-            ui.printTaskAdded(tasksList.get(tasksList.size() - 1), tasksList.size());
+            command = new DeadlineCommand(new Deadline(deadlineDescription, deadlineParsedDate));
             break;
 
         case "event":
@@ -103,7 +101,6 @@ public class Parser {
             String eventDescription = eventSplit[0].substring(splitCmd[0].length() + 1);
             String eventFrom = eventSplit[1].substring(0, eventSplit[1].length() - eventSplit2[1].length() - 5);
             String eventTo = eventSplit2[1];
-
             if (eventDescription.equals("") || eventFrom.equals("") || eventTo.equals("")) {
                 throw new BillyFieldErrorException("event");
             }
@@ -111,37 +108,33 @@ public class Parser {
             LocalDateTime eventParsedFrom = dateParsing(eventFrom);
             LocalDateTime eventParsedTo = dateParsing(eventTo);
             if (eventParsedFrom == null || eventParsedTo == null) {
-                throw new DateTimeException("\nBilly does not understand the date format..."
-                        + "\nPlease use dd-MM-yyyy HHmm format...\n");
+                throw new DateTimeException("Billy does not understand the date format..."
+                        + "\nPlease use dd-MM-yyyy HHmm format...");
             } else if (eventParsedFrom.isAfter(eventParsedTo)) {
                 throw new DateTimeException("Please ensure that the start date is before the end date...");
             }
 
-            tasksList.add(new Event(eventDescription, eventParsedFrom, eventParsedTo));
-
-            fileManager.updateFile(tasksList.get(tasksList.size() - 1));
-            ui.printTaskAdded(tasksList.get(tasksList.size() - 1), tasksList.size());
+            command = new EventCommand(new Event(eventDescription, eventParsedFrom, eventParsedTo));
             break;
 
         case "delete":
             if (splitCmd.length == 1) {
                 throw new BillyFieldErrorException("delete");
-            } else if (Integer.parseInt(splitCmd[1]) > tasksList.size()) {
+            } else if (Integer.parseInt(splitCmd[1]) > tasksList.getSize()) {
                 throw new BillyUnkownTaskNumException(splitCmd[1]);
             }
-            Task deletedTask = tasksList.get(Integer.parseInt(splitCmd[1]) - 1);
-            tasksList.remove(Integer.parseInt(splitCmd[1]) - 1);
-            fileManager.updateFile(tasksList);
-            ui.printToUser("\nRemoved from the list:\n" + splitCmd[1] + ". " + deletedTask + "\n",
-                    "There are currently " + tasksList.size() + " task(s) in the list.\n");
-            ui.printLine();
+
+            command = new DeleteCommand(Integer.parseInt(splitCmd[1]) - 1,
+                    tasksList.getTask(Integer.parseInt(splitCmd[1]) - 1));
             break;
+
         default:
             throw new BillyUnknownException();
         }
+        return command;
     }
 
-    public static LocalDateTime dateParsing(String date) {
+    public static LocalDateTime dateParsing(String date) throws DateTimeException {
         LocalDateTime parsedDate = null;
         if (DATETIME_PATTERN.matcher(date).matches()) {
             parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"));

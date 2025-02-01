@@ -14,7 +14,7 @@ import billy.tasks.Todo;
 public class FileManager {
     private static final String PATH_NAME = "./src/main/java/data/billy.txt";
 
-    public void startUp(ArrayList<Task> tasksList) throws IOException {
+    public static void startUp(ArrayList<Task> tasksList) throws IOException {
         File file = new File(PATH_NAME);
         if (!file.getParentFile().exists()) {
             try {
@@ -58,7 +58,7 @@ public class FileManager {
         fileScanner.close();
     }
 
-    public void updateFile(Task task) throws IOException {
+    public static void updateFile(Task task) throws IOException {
         File file = new File(PATH_NAME);
         try {
             java.io.FileWriter fileWriter = new java.io.FileWriter(file, true);
@@ -69,14 +69,14 @@ public class FileManager {
         }
     }
 
-    public void updateFile(ArrayList<Task> tasksList) throws IOException {
+    public static void updateFile(ArrayList<Task> tasksList) throws IOException {
         deleteFile();
         for (int i = 0; i < tasksList.size(); i++) {
             updateFile(tasksList.get(i));
         }
     }
 
-    private void deleteFile() throws IOException {
+    private static void deleteFile() throws IOException {
         File file = new File(PATH_NAME);
         try {
             java.io.FileWriter fileWriter = new java.io.FileWriter(file, false);

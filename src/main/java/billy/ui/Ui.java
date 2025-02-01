@@ -1,10 +1,10 @@
 package billy.ui;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import billy.constants.DesignConstants;
 import billy.tasks.Task;
+import billy.tasks.TasksList;
 
 public class Ui {
     private final Scanner scanner;
@@ -42,10 +42,10 @@ public class Ui {
                 DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    public final void printList(ArrayList<Task> tasksList) {
+    public final void printList(TasksList tasksList) {
         printToUser("\nHere are the items in your list:");
-        for (int i = 0; i < tasksList.size(); i++) {
-            printToUser((i + 1) + ". " + tasksList.get(i));
+        for (int i = 0; i < tasksList.getSize(); i++) {
+            printToUser((i + 1) + ". " + tasksList.getTask(i));
         }
         printToUser("", DesignConstants.HORIZONTALLINE_STRING);
     }
