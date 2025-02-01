@@ -62,7 +62,7 @@ public class Ui {
 
     public void printToUser(String... message) {
         for (String m : message) {
-            System.out.println(m);
+            System.out.print(m + "\n");
         }
     }
 }
