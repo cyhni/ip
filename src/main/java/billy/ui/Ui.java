@@ -78,9 +78,9 @@ public class Ui {
         printToUser("", DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    /** 
+    /**
      * Prints the filtered list of tasks containing the keyword.
-     * 
+     *
      * @param tasksList The list of tasks to filter.
      * @param keyword The keyword to filter the list with.
      */
@@ -115,7 +115,7 @@ public class Ui {
 
     /**
      * Prints the specified list of {@code String} messages to the user.
-     * 
+     *
      * @param message The list of messages to be printed.
      */
     public void printToUser(String... message) {

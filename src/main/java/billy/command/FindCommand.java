@@ -18,7 +18,7 @@ public class FindCommand extends Command {
         this.keyword = keyword;
     }
 
-    @Override 
+    @Override
     public void execute(TasksList tasksList, Ui ui) {
         ui.printFilteredList(tasksList, keyword);
     }

@@ -16,7 +16,7 @@ public class Task {
         this.description = description;
         this.isDone = false;
     }
-    
+
     /*
      * Returns the description of the task.
      */
