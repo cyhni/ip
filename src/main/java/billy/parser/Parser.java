@@ -10,6 +10,7 @@ import billy.command.Command;
 import billy.command.DeadlineCommand;
 import billy.command.DeleteCommand;
 import billy.command.EventCommand;
+import billy.command.FindCommand;
 import billy.command.ListCommand;
 import billy.command.MarkCommand;
 import billy.command.TodoCommand;
@@ -126,6 +127,14 @@ public class Parser {
 
             command = new DeleteCommand(Integer.parseInt(splitCmd[1]) - 1,
                     tasksList.getTask(Integer.parseInt(splitCmd[1]) - 1));
+            break;
+
+        case "find":
+            if (splitCmd.length == 1) {
+                throw new BillyFieldErrorException("find");
+            }
+
+            command = new FindCommand(splitCmd[1]);
             break;
 
         default:

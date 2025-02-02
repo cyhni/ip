@@ -50,6 +50,22 @@ public class Ui {
         printToUser("", DesignConstants.HORIZONTALLINE_STRING);
     }
 
+    /**
+     * Prints the filtered list of tasks containing the keyword.
+     * 
+     * @param tasksList The list of tasks to filter.
+     * @param keyword The keyword to filter the list with.
+     */
+    public final void printFilteredList(TasksList tasksList, String keyword) {
+        printToUser("\nHere are the items in your list:");
+        for (int i = 0; i < tasksList.getSize(); i++) {
+            if (tasksList.getTask(i).getDescription().contains(keyword)) {
+                printToUser((i + 1) + ". " + tasksList.getTask(i));
+            }
+        }
+        printToUser("", DesignConstants.HORIZONTALLINE_STRING);
+    }
+
     public final void printTaskAdded(Task task, int counter) {
         printToUser("\nAdded to the list:\n" + counter + ". " + task + "\n",
                 "There are currently " + counter + " task(s) in the list.\n",
