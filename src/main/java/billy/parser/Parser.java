@@ -24,9 +24,26 @@ import billy.tasks.TasksList;
 import billy.tasks.Todo;
 import billy.ui.Ui;
 
+/**
+ * The Parser class is responsible for interpreting user commands and converting them into executable Command objects.
+ * It supports various commands such as list, mark, unmark, todo, deadline, event, and delete.
+ */
 public class Parser {
     private static final Pattern DATETIME_PATTERN = Pattern.compile("\\d{2}-\\d{2}\\-\\d{4} \\d{4}");
 
+    /**
+     * Parses the user command and returns the corresponding Command object.
+     * The user command must be in the format "command [description] [date]".
+     * The date must be in the format "dd-MM-yyyy HHmm".
+     *
+     * @param userCmd The user command to be parsed.
+     * @param tasksList The list of tasks.
+     * @param ui The user interface.
+     * @return The Command object corresponding to the user command.
+     * @throws BillyException If an error occurs during parsing.
+     * @throws DateTimeException If an error occurs during date parsing.
+     * @throws IOException If an error occurs during I/O.
+     */
     public static Command parseCommand(String userCmd, TasksList tasksList, Ui ui)
             throws BillyException,
             DateTimeException,
@@ -134,6 +151,14 @@ public class Parser {
         return command;
     }
 
+    /**
+     * Parses the date string and returns the corresponding LocalDateTime object.
+     * The date string must be in the format "dd-MM-yyyy HHmm".
+     *
+     * @param date The date string to be parsed.
+     * @return The LocalDateTime object corresponding to the date string.
+     * @throws DateTimeException If an error occurs during date parsing.
+     */
     public static LocalDateTime dateParsing(String date) throws DateTimeException {
         LocalDateTime parsedDate = null;
         if (DATETIME_PATTERN.matcher(date).matches()) {
