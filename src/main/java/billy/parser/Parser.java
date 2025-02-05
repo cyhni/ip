@@ -50,48 +50,48 @@ public class Parser {
             DateTimeException,
             IOException {
         Command command;
-        String[] splitCmd = userCmd.split(" ");
+        String[] commandStrings = userCmd.split(" ");
 
-        switch (splitCmd[0]) {
+        switch (commandStrings[0]) {
         case "list":
             command = new ListCommand();
             break;
 
         case "mark":
-            if (splitCmd.length == 1) {
+            if (commandStrings.length == 1) {
                 throw new BillyFieldErrorException("mark");
-            } else if (Integer.parseInt(splitCmd[1]) > tasksList.getSize()) {
-                throw new BillyUnkownTaskNumException(splitCmd[1]);
+            } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()) {
+                throw new BillyUnkownTaskNumException(commandStrings[1]);
             }
 
-            command = new MarkCommand(Integer.parseInt(splitCmd[1]));
+            command = new MarkCommand(Integer.parseInt(commandStrings[1]));
             break;
 
         case "unmark":
-            if (splitCmd.length == 1) {
+            if (commandStrings.length == 1) {
                 throw new BillyFieldErrorException("mark");
-            } else if (Integer.parseInt(splitCmd[1]) > tasksList.getSize()) {
-                throw new BillyUnkownTaskNumException(splitCmd[1]);
+            } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()) {
+                throw new BillyUnkownTaskNumException(commandStrings[1]);
             }
 
-            command = new UnmarkCommand(Integer.parseInt(splitCmd[1]));
+            command = new UnmarkCommand(Integer.parseInt(commandStrings[1]));
             break;
 
         case "todo":
-            if (splitCmd.length == 1) {
+            if (commandStrings.length == 1) {
                 throw new BillyFieldErrorException("todo");
             }
 
-            command = new TodoCommand(new Todo(userCmd.substring(splitCmd[0].length() + 1)));
+            command = new TodoCommand(new Todo(userCmd.substring(commandStrings[0].length() + 1)));
             break;
 
         case "deadline":
             String[] deadlineSplit = userCmd.split(" /by ");
-            if (deadlineSplit.length <= 1 || deadlineSplit[0].length() == splitCmd[0].length()) {
+            if (deadlineSplit.length <= 1 || deadlineSplit[0].length() == commandStrings[0].length()) {
                 throw new BillyFieldErrorException("deadline");
             }
 
-            String deadlineDescription = deadlineSplit[0].substring(splitCmd[0].length() + 1);
+            String deadlineDescription = deadlineSplit[0].substring(commandStrings[0].length() + 1);
             String deadlineDate = deadlineSplit[1];
             if (deadlineDescription.equals("") || deadlineDate.equals("")) {
                 throw new BillyFieldErrorException("deadline");
@@ -112,12 +112,12 @@ public class Parser {
             String[] eventSplitCheck = eventSplit[1].split(" /to ");
             if (eventSplit.length <= 1
                     || eventSplit2.length <= 1
-                    || eventSplit[0].length() == splitCmd[0].length()
+                    || eventSplit[0].length() == commandStrings[0].length()
                     || eventSplitCheck.length == 1) {
                 throw new BillyFieldErrorException("event");
             }
 
-            String eventDescription = eventSplit[0].substring(splitCmd[0].length() + 1);
+            String eventDescription = eventSplit[0].substring(commandStrings[0].length() + 1);
             String eventFrom = eventSplit[1].substring(0, eventSplit[1].length() - eventSplit2[1].length() - 5);
             String eventTo = eventSplit2[1];
             if (eventDescription.equals("") || eventFrom.equals("") || eventTo.equals("")) {
@@ -137,22 +137,22 @@ public class Parser {
             break;
 
         case "delete":
-            if (splitCmd.length == 1) {
+            if (commandStrings.length == 1) {
                 throw new BillyFieldErrorException("delete");
-            } else if (Integer.parseInt(splitCmd[1]) > tasksList.getSize()) {
-                throw new BillyUnkownTaskNumException(splitCmd[1]);
+            } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()) {
+                throw new BillyUnkownTaskNumException(commandStrings[1]);
             }
 
-            command = new DeleteCommand(Integer.parseInt(splitCmd[1]) - 1,
-                    tasksList.getTask(Integer.parseInt(splitCmd[1]) - 1));
+            command = new DeleteCommand(Integer.parseInt(commandStrings[1]) - 1,
+                    tasksList.getTask(Integer.parseInt(commandStrings[1]) - 1));
             break;
 
         case "find":
-            if (splitCmd.length == 1) {
+            if (commandStrings.length == 1) {
                 throw new BillyFieldErrorException("find");
             }
 
-            command = new FindCommand(splitCmd[1]);
+            command = new FindCommand(commandStrings[1]);
             break;
 
         default:
