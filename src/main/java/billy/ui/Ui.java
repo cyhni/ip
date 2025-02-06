@@ -100,7 +100,7 @@ public class Ui {
      * @param task The task to be printed.
      * @param counter The number of tasks in the list.
      */
-    public final void printTaskAdded(Task task, int counter) {
+    public final void printAddedTask(Task task, int counter) {
         printToUser("\nAdded to the list:\n" + counter + ". " + task + "\n",
                 "There are currently " + counter + " task(s) in the list.\n",
                 DesignConstants.HORIZONTALLINE_STRING);

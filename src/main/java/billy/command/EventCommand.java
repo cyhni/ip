@@ -25,6 +25,6 @@ public class EventCommand extends Command {
     public void execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.addTask(event);
 
-        ui.printTaskAdded(event, tasksList.getSize());
+        ui.printAddedTask(event, tasksList.getSize());
     }
 }

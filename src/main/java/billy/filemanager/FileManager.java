@@ -53,12 +53,12 @@ public class FileManager {
                 tasksList.add(new Todo(splitLine[2]));
                 break;
             case "D":
-                tasksList.add(new Deadline(splitLine[2], Parser.dateParsing(splitLine[3])));
+                tasksList.add(new Deadline(splitLine[2], Parser.parseDate(splitLine[3])));
                 break;
             case "E":
                 tasksList.add(new Event(splitLine[2],
-                        Parser.dateParsing(splitLine[3]),
-                        Parser.dateParsing(splitLine[4])));
+                        Parser.parseDate(splitLine[3]),
+                        Parser.parseDate(splitLine[4])));
                 break;
             default:
                 break;

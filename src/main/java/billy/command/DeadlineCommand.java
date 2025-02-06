@@ -25,6 +25,6 @@ public class DeadlineCommand extends Command {
     public void execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.addTask(deadline);
 
-        ui.printTaskAdded(deadline, tasksList.getSize());
+        ui.printAddedTask(deadline, tasksList.getSize());
     }
 }

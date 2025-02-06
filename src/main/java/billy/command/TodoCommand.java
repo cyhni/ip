@@ -25,6 +25,6 @@ public class TodoCommand extends Command {
     public void execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.addTask(todo);
 
-        ui.printTaskAdded(todo, tasksList.getSize());
+        ui.printAddedTask(todo, tasksList.getSize());
     }
 }

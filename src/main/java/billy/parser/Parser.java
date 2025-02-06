@@ -97,7 +97,7 @@ public class Parser {
                 throw new BillyFieldErrorException("deadline");
             }
 
-            LocalDateTime deadlineParsedDate = dateParsing(deadlineDate);
+            LocalDateTime deadlineParsedDate = parseDate(deadlineDate);
             if (deadlineParsedDate == null) {
                 throw new DateTimeException("Billy does not understand the date format..."
                         + "\nPlease use dd-MM-yyyy HHmm format...");
@@ -124,8 +124,8 @@ public class Parser {
                 throw new BillyFieldErrorException("event");
             }
 
-            LocalDateTime eventParsedFrom = dateParsing(eventFrom);
-            LocalDateTime eventParsedTo = dateParsing(eventTo);
+            LocalDateTime eventParsedFrom = parseDate(eventFrom);
+            LocalDateTime eventParsedTo = parseDate(eventTo);
             if (eventParsedFrom == null || eventParsedTo == null) {
                 throw new DateTimeException("Billy does not understand the date format..."
                         + "\nPlease use dd-MM-yyyy HHmm format...");
@@ -169,7 +169,7 @@ public class Parser {
      * @return The LocalDateTime object corresponding to the date string.
      * @throws DateTimeException If an error occurs during date parsing.
      */
-    public static LocalDateTime dateParsing(String date) throws DateTimeException {
+    public static LocalDateTime parseDate(String date) throws DateTimeException {
         LocalDateTime parsedDate = null;
         if (DATETIME_PATTERN.matcher(date).matches()) {
             parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"));
