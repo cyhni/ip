@@ -12,6 +12,8 @@ public class Ui {
 
     /**
      * Prints the introduction message.
+     *
+     * @return The introduction message.
      */
     public final String printIntroduction() {
         return printToUser(
@@ -33,6 +35,8 @@ public class Ui {
 
     /**
      * Prints the goodbye message.
+     *
+     * @return The goodbye message.
      */
     public final String printBye() {
         return printToUser("Bye bye.");
@@ -42,6 +46,7 @@ public class Ui {
      * Prints an error message.
      *
      * @param errorMessage The error message to be printed.
+     * @return The error message.
      */
     public final String printError(String errorMessage) {
         return printToUser("Error: ", errorMessage);
@@ -51,6 +56,7 @@ public class Ui {
      * Prints the list of tasks.
      *
      * @param tasksList The list of tasks to be printed.
+     * @return The list of tasks.
      */
     public final String printList(TasksList tasksList) {
         StringBuilder builder = new StringBuilder();
@@ -66,6 +72,7 @@ public class Ui {
      *
      * @param tasksList The list of tasks to filter.
      * @param keyword The keyword to filter the list with.
+     * @return The filtered list of tasks.
      */
     public final String printFilteredList(TasksList tasksList, String keyword) {
         StringBuilder builder = new StringBuilder();
@@ -83,6 +90,7 @@ public class Ui {
      *
      * @param task The task to be printed.
      * @param counter The number of tasks in the list.
+     * @return The message to be printed.
      */
     public final String printAddedTask(Task task, int counter) {
         return printToUser("Added to the list:\n" + counter + ". " + task + "\n",
@@ -91,6 +99,8 @@ public class Ui {
 
     /**
      * Prints a line.
+     *
+     * @return The line.
      */
     public final String printLine() {
         return printToUser(DesignConstants.HORIZONTALLINE_STRING);
@@ -100,6 +110,7 @@ public class Ui {
      * Prints the specified list of {@code String} messages to the user.
      *
      * @param message The list of messages to be printed.
+     * @return The concatenated messages.
      */
     public String printToUser(String... message) {
         StringBuilder builder = new StringBuilder();

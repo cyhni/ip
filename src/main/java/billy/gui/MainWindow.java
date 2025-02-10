@@ -35,7 +35,7 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-        dialogContainer.getChildren().addAll(DialogBox.getBillyDialog(WELCOME_STRING, dukeImage));
+        dialogContainer.getChildren().addAll(DialogBox.getBillyDialog(WELCOME_STRING, dukeImage, ""));
     }
 
     /**
@@ -55,9 +55,10 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = billy.getResponse(input);
+        String commandType = billy.getCommandType();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getBillyDialog(response, dukeImage)
+                DialogBox.getBillyDialog(response, dukeImage, commandType)
         );
         userInput.clear();
     }

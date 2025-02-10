@@ -17,6 +17,7 @@ import billy.ui.Ui;
 public class Billy {
     private TasksList tasksList;
     private Ui ui;
+    private String commandType;
 
     /**
      * Constructs a Billy object.
@@ -71,14 +72,26 @@ public class Billy {
      * Generates a response for the user's chat message.
      */
     public String getResponse(String userCmd) {
+        String response;
         if (userCmd.equals("bye")) {
             return ui.printBye();
         }
         try {
             Command c = Parser.parseCommand(userCmd, tasksList, ui);
-            return c.execute(tasksList, ui);
+            response = c.execute(tasksList, ui);
+            commandType = c.getClass().getSimpleName();
         } catch (BillyException | DateTimeException | IOException e) {
-            return ui.printError(e.getMessage());
+            response = ui.printError(e.getMessage());
         }
+        return response;
+    }
+
+    /**
+     * Returns the type of command that was executed.
+     *
+     * @return The type of command that was executed
+     */
+    public String getCommandType() {
+        return commandType;
     }
 }

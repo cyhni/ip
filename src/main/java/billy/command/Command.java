@@ -18,6 +18,7 @@ public abstract class Command {
      *
      * @param tasksList The list of tasks.
      * @param ui The user interface.
+     * @return The response to the user.
      * @throws IOException If an I/O error occurs.
      */
     public abstract String execute(TasksList tasksList, Ui ui) throws IOException;
