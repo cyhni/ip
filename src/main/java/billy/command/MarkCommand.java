@@ -21,11 +21,10 @@ public class MarkCommand extends Command {
     }
 
     @Override
-    public void execute(TasksList tasksList, Ui ui) throws IOException {
+    public String execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.markTaskAsDone(taskNumber - 1);
 
-        ui.printToUser("\nMarked as done:\n"
+        return ui.printToUser("\nMarked as done:\n"
             + (taskNumber) + ". " + tasksList.getTask(taskNumber - 1) + "\n");
-        ui.printLine();
     }
 }

@@ -36,7 +36,7 @@ public class ParserTest {
             IOException {
         String input = "mark 1";
         try {
-            Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList(), new Ui());
         } catch (BillyException e) {
             assertEquals("Billy does not have task number 1...", e.getMessage());
         }
@@ -49,7 +49,7 @@ public class ParserTest {
             IOException {
         String input = "mark";
         try {
-            Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList(), new Ui());
         } catch (BillyException e) {
             assertEquals("Incorrect fields for " + input + " function...\n\nBilly is confused!!!",
                     e.getMessage());
@@ -98,7 +98,7 @@ public class ParserTest {
             IOException {
         String input = "event read book /from 01-01-2021 0000 /to 01-01-2021 010";
         try {
-            Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList(), new Ui());
         } catch (DateTimeException e) {
             assertEquals("Billy does not understand the date format..."
                     + "\nPlease use dd-MM-yyyy HHmm format...",
@@ -113,7 +113,7 @@ public class ParserTest {
             IOException {
         String input = "event read book /from 01-01-2021 0000 /to 01-01-2020 0000";
         try {
-            Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList(), new Ui());
         } catch (DateTimeException e) {
             assertEquals("Please ensure that the start date is before the end date...",
                     e.getMessage());

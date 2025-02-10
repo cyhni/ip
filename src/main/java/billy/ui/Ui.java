@@ -1,7 +1,5 @@
 package billy.ui;
 
-import java.util.Scanner;
-
 import billy.constants.DesignConstants;
 import billy.tasks.Task;
 import billy.tasks.TasksList;
@@ -11,20 +9,14 @@ import billy.tasks.TasksList;
  * It prints messages to the user and reads input from the user.
  */
 public class Ui {
-    private final Scanner scanner;
-
-    /**
-     * Constructs a Ui object.
-     */
-    public Ui() {
-        this.scanner = new Scanner(System.in);
-    }
 
     /**
      * Prints the introduction message.
+     *
+     * @return The introduction message.
      */
-    public final void printIntroduction() {
-        printToUser(
+    public final String printIntroduction() {
+        return printToUser(
                 DesignConstants.HORIZONTALLINE_STRING,
                 DesignConstants.LOGO_STRING,
                 DesignConstants.HORIZONTALLINE_STRING,
@@ -32,50 +24,47 @@ public class Ui {
                 DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    /**
-     * Reads the command from the user.
-     *
-     * @return The command entered by the user.
-     */
-    public final String readCommand() {
-        System.out.print("Enter your command: ");
-        return scanner.nextLine();
-    }
+    // /**
+    //  * Reads the command from the user.
+    //  *
+    //  * @return The command entered by the user.
+    //  */
+    // public final String readCommand() {
+    //     System.out.print("Enter your command: ");
+    // }
 
     /**
      * Prints the goodbye message.
+     *
+     * @return The goodbye message.
      */
-    public final void printBye() {
-        printToUser(
-                "\nBye bye.\n",
-                DesignConstants.HORIZONTALLINE_STRING);
-        scanner.close();
+    public final String printBye() {
+        return printToUser("Bye bye.");
     }
 
     /**
      * Prints an error message.
      *
      * @param errorMessage The error message to be printed.
+     * @return The error message.
      */
-    public final void printError(String errorMessage) {
-        printToUser(
-                "",
-                errorMessage,
-                "",
-                DesignConstants.HORIZONTALLINE_STRING);
+    public final String printError(String errorMessage) {
+        return printToUser("Error: ", errorMessage);
     }
 
     /**
      * Prints the list of tasks.
      *
      * @param tasksList The list of tasks to be printed.
+     * @return The list of tasks.
      */
-    public final void printList(TasksList tasksList) {
-        printToUser("\nHere are the items in your list:");
+    public final String printList(TasksList tasksList) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(printToUser("Here are the items in your list:"));
         for (int i = 0; i < tasksList.getSize(); i++) {
-            printToUser((i + 1) + ". " + tasksList.getTask(i));
+            builder.append(printToUser((i + 1) + ". " + tasksList.getTask(i)));
         }
-        printToUser("", DesignConstants.HORIZONTALLINE_STRING);
+        return builder.toString();
     }
 
     /**
@@ -83,15 +72,17 @@ public class Ui {
      *
      * @param tasksList The list of tasks to filter.
      * @param keyword The keyword to filter the list with.
+     * @return The filtered list of tasks.
      */
-    public final void printFilteredList(TasksList tasksList, String keyword) {
-        printToUser("\nHere are the items in your list:");
+    public final String printFilteredList(TasksList tasksList, String keyword) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(printToUser("Here are the items in your list:"));
         for (int i = 0; i < tasksList.getSize(); i++) {
             if (tasksList.getTask(i).getDescription().contains(keyword)) {
-                printToUser((i + 1) + ". " + tasksList.getTask(i));
+                builder.append(printToUser((i + 1) + ". " + tasksList.getTask(i)));
             }
         }
-        printToUser("", DesignConstants.HORIZONTALLINE_STRING);
+        return builder.toString();
     }
 
     /**
@@ -99,28 +90,33 @@ public class Ui {
      *
      * @param task The task to be printed.
      * @param counter The number of tasks in the list.
+     * @return The message to be printed.
      */
-    public final void printAddedTask(Task task, int counter) {
-        printToUser("\nAdded to the list:\n" + counter + ". " + task + "\n",
-                "There are currently " + counter + " task(s) in the list.\n",
-                DesignConstants.HORIZONTALLINE_STRING);
+    public final String printAddedTask(Task task, int counter) {
+        return printToUser("Added to the list:\n" + counter + ". " + task + "\n",
+                "There are currently " + counter + " task(s) in the list.");
     }
 
     /**
      * Prints a line.
+     *
+     * @return The line.
      */
-    public final void printLine() {
-        printToUser(DesignConstants.HORIZONTALLINE_STRING);
+    public final String printLine() {
+        return printToUser(DesignConstants.HORIZONTALLINE_STRING);
     }
 
     /**
      * Prints the specified list of {@code String} messages to the user.
      *
      * @param message The list of messages to be printed.
+     * @return The concatenated messages.
      */
-    public void printToUser(String... message) {
+    public String printToUser(String... message) {
+        StringBuilder builder = new StringBuilder();
         for (String m : message) {
-            System.out.print(m + "\n");
+            builder.append(m).append("\n");
         }
+        return builder.toString();
     }
 }
