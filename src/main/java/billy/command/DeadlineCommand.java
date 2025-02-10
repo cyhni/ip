@@ -22,9 +22,9 @@ public class DeadlineCommand extends Command {
     }
 
     @Override
-    public void execute(TasksList tasksList, Ui ui) throws IOException {
+    public String execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.addTask(deadline);
 
-        ui.printAddedTask(deadline, tasksList.getSize());
+        return ui.printAddedTask(deadline, tasksList.getSize());
     }
 }

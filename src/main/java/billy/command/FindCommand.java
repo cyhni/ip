@@ -19,7 +19,7 @@ public class FindCommand extends Command {
     }
 
     @Override
-    public void execute(TasksList tasksList, Ui ui) {
-        ui.printFilteredList(tasksList, keyword);
+    public String execute(TasksList tasksList, Ui ui) {
+        return ui.printFilteredList(tasksList, keyword);
     }
 }

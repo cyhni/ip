@@ -22,9 +22,9 @@ public class TodoCommand extends Command {
     }
 
     @Override
-    public void execute(TasksList tasksList, Ui ui) throws IOException {
+    public String execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.addTask(todo);
 
-        ui.printAddedTask(todo, tasksList.getSize());
+        return ui.printAddedTask(todo, tasksList.getSize());
     }
 }

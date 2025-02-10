@@ -20,5 +20,5 @@ public abstract class Command {
      * @param ui The user interface.
      * @throws IOException If an I/O error occurs.
      */
-    public abstract void execute(TasksList tasksList, Ui ui) throws IOException;
+    public abstract String execute(TasksList tasksList, Ui ui) throws IOException;
 }

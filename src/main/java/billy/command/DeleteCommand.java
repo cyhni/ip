@@ -25,11 +25,10 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TasksList tasksList, Ui ui) throws IOException {
+    public String execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.removeTask(index);
 
-        ui.printToUser("\nRemoved from the list:\n" + (index + 1) + ". " + deletedTask + "\n",
+        return ui.printToUser("\nRemoved from the list:\n" + (index + 1) + ". " + deletedTask + "\n",
                 "There are currently " + tasksList.getSize() + " task(s) in the list.\n");
-        ui.printLine();
     }
 }

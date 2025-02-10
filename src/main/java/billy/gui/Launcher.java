@@ -1,4 +1,4 @@
-package billy;
+package billy.gui;
 
 import javafx.application.Application;
 

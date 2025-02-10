@@ -8,7 +8,7 @@ import billy.ui.Ui;
  */
 public class ListCommand extends Command {
     @Override
-    public void execute(TasksList tasksList, Ui ui) {
-        ui.printList(tasksList);
+    public String execute(TasksList tasksList, Ui ui) {
+        return ui.printList(tasksList);
     }
 }

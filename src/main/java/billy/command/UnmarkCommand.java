@@ -21,11 +21,10 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(TasksList tasksList, Ui ui) throws IOException {
+    public String execute(TasksList tasksList, Ui ui) throws IOException {
         tasksList.markTaskAsUndone(taskNumber - 1);
 
-        ui.printToUser("\nMarked as undone:\n"
+        return ui.printToUser("\nMarked as undone:\n"
             + (taskNumber) + ". " + tasksList.getTask(taskNumber - 1) + "\n");
-        ui.printLine();
     }
 }
