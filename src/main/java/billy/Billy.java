@@ -51,7 +51,7 @@ public class Billy {
             return ui.printBye();
         }
         try {
-            Command c = Parser.parseCommand(userCmd, tasksList, ui);
+            Command c = Parser.parseCommand(userCmd, tasksList);
             response = c.execute(tasksList, ui);
             commandType = c.getClass().getSimpleName();
         } catch (BillyException | DateTimeException | IOException e) {
