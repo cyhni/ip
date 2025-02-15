@@ -57,6 +57,7 @@ public class Billy {
         } catch (BillyException | DateTimeException | IOException e) {
             response = ui.printError(e.getMessage());
         }
+        assert response != null : "Response should not be null";
         return response;
     }
 
