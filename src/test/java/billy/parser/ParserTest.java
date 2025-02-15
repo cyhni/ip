@@ -25,7 +25,7 @@ public class ParserTest {
             DateTimeException,
             IOException {
         String input = "list";
-        Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+        Command c = Parser.parseCommand(input, new TasksList());
         assertTrue(c instanceof ListCommand);
     }
 
@@ -36,7 +36,7 @@ public class ParserTest {
             IOException {
         String input = "mark 1";
         try {
-            Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList());
         } catch (BillyException e) {
             assertEquals("Billy does not have task number 1...", e.getMessage());
         }
@@ -49,7 +49,7 @@ public class ParserTest {
             IOException {
         String input = "mark";
         try {
-            Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList());
         } catch (BillyException e) {
             assertEquals("Incorrect fields for " + input + " function...\n\nBilly is confused!!!",
                     e.getMessage());
@@ -64,10 +64,10 @@ public class ParserTest {
         TasksList tasksList = new TasksList();
         Ui ui = new Ui();
         String input = "todo read book";
-        Command c = Parser.parseCommand(input, tasksList, ui);
+        Command c = Parser.parseCommand(input, tasksList);
         c.execute(tasksList, ui);
         input = "mark 1";
-        c = Parser.parseCommand(input, tasksList, ui);
+        c = Parser.parseCommand(input, tasksList);
         assertTrue(c instanceof MarkCommand);
     }
 
@@ -77,7 +77,7 @@ public class ParserTest {
             DateTimeException,
             IOException {
         String input = "todo read book";
-        Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+        Command c = Parser.parseCommand(input, new TasksList());
         assertTrue(c instanceof TodoCommand);
     }
 
@@ -87,7 +87,7 @@ public class ParserTest {
             DateTimeException,
             IOException {
         String input = "event read book /from 01-01-2021 0000 /to 01-01-2021 0100";
-        Command c = Parser.parseCommand(input, new TasksList(), new Ui());
+        Command c = Parser.parseCommand(input, new TasksList());
         assertTrue(c instanceof EventCommand);
     }
 
@@ -98,7 +98,7 @@ public class ParserTest {
             IOException {
         String input = "event read book /from 01-01-2021 0000 /to 01-01-2021 010";
         try {
-            Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList());
         } catch (DateTimeException e) {
             assertEquals("Billy does not understand the date format..."
                     + "\nPlease use dd-MM-yyyy HHmm format...",
@@ -113,7 +113,7 @@ public class ParserTest {
             IOException {
         String input = "event read book /from 01-01-2021 0000 /to 01-01-2020 0000";
         try {
-            Parser.parseCommand(input, new TasksList(), new Ui());
+            Parser.parseCommand(input, new TasksList());
         } catch (DateTimeException e) {
             assertEquals("Please ensure that the start date is before the end date...",
                     e.getMessage());
@@ -128,10 +128,10 @@ public class ParserTest {
         TasksList tasksList = new TasksList();
         Ui ui = new Ui();
         String input = "todo read book";
-        Command c = Parser.parseCommand(input, tasksList, ui);
+        Command c = Parser.parseCommand(input, tasksList);
         c.execute(tasksList, ui);
         input = "delete 1";
-        c = Parser.parseCommand(input, tasksList, ui);
+        c = Parser.parseCommand(input, tasksList);
         assertTrue(c instanceof DeleteCommand);
     }
 }

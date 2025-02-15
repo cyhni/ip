@@ -33,34 +33,8 @@ public class Billy {
         }
     }
 
-    // /**
-    //  * Runs the main program loop of the Billy application.
-    //  * <p>
-    //  * The program will continue to run until the user types "bye".
-    //  * The user's input will be parsed and executed accordingly.
-    //  * </p>
-    //  */
-    // public void run() {
-    //     ui.printIntroduction();
-    //     while (true) {
-    //         String userCmd = ui.readCommand();
-    //         ui.printLine();
-
-    //         if (userCmd.equals("bye")) {
-    //             break;
-    //         }
-    //         try {
-    //             Command c = Parser.parseCommand(userCmd, tasksList, ui);
-    //             c.execute(tasksList, ui);
-    //         } catch (BillyException | DateTimeException | IOException e) {
-    //             ui.printError(e.getMessage());
-    //         }
-    //     }
-    //     ui.printBye();
-    // }
-
     /**
-     * The main entry point of the Billy application.
+     * Acts as the main entry point of the Billy application.
      *
      * @param args The command line arguments.
      */
@@ -77,7 +51,7 @@ public class Billy {
             return ui.printBye();
         }
         try {
-            Command c = Parser.parseCommand(userCmd, tasksList, ui);
+            Command c = Parser.parseCommand(userCmd, tasksList);
             response = c.execute(tasksList, ui);
             commandType = c.getClass().getSimpleName();
         } catch (BillyException | DateTimeException | IOException e) {
