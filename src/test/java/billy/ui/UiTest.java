@@ -10,19 +10,6 @@ import billy.tasks.TasksList;
 import billy.tasks.Todo;
 
 public class UiTest {
-    // @Test
-    // public void printIntroduction_introductionMessage_success() throws IOException {
-    //     Ui ui = new Ui();
-    //     ui.printIntroduction();;
-    //     String expected = DesignConstants.HORIZONTALLINE_STRING + "\n"
-    //             + DesignConstants.LOGO_STRING + "\n"
-    //             + DesignConstants.HORIZONTALLINE_STRING + "\n"
-    //             + "\nWelcome to the world of Billy!\n"
-    //             + "How can I help you?\n" + "\n"
-    //             + DesignConstants.HORIZONTALLINE_STRING + "\n";
-    //     assertEquals(expected, outText.toString());
-    // }
-
     @Test
     public void printList_noTasks_success() throws IOException {
         Ui ui = new Ui();
