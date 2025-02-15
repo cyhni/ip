@@ -1,10 +1,6 @@
 # Commit message txt file
 message.txt
 
-# Local Files
-src/main/java/data/billy.txt
-src/main/java/data
-
 # IDEA files
 /.idea/
 /out/
