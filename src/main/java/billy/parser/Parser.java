@@ -49,27 +49,35 @@ public class Parser {
 
         switch (commandStrings[0]) {
         case "list":
+        case "l":
             command = parseList();
             break;
         case "mark":
+        case "m":
             command = parseMark(commandStrings, tasksList);
             break;
         case "unmark":
+        case "um":
             command = parseUnmark(commandStrings, tasksList);
             break;
         case "todo":
+        case "t":
             command = parseToDo(userCmd, commandStrings);
             break;
         case "deadline":
+        case "d":
             command = parseDeadline(userCmd, commandStrings);
             break;
         case "event":
+        case "e":
             command = parseEvent(userCmd, commandStrings);
             break;
         case "delete":
+        case "del":
             command = parseDelete(commandStrings, tasksList);
             break;
         case "find":
+        case "f":
             command = parseFind(commandStrings);
             break;
         default:
