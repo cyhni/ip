@@ -158,6 +158,7 @@ public class Parser {
         default:
             throw new BillyUnknownException();
         }
+        assert command != null : "Command should not be null";
         return command;
     }
 
