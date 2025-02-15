@@ -34,7 +34,7 @@ public class Billy {
     }
 
     /**
-     * The main entry point of the Billy application.
+     * Acts as the main entry point of the Billy application.
      *
      * @param args The command line arguments.
      */
