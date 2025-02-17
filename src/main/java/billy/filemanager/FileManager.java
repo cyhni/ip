@@ -17,7 +17,7 @@ import billy.tasks.Todo;
  * and rewriting the file with an updated list of tasks.
  */
 public class FileManager {
-    private static final String PATH_NAME = "./src/main/java/data/billy.txt";
+    private static final String PATH_NAME = "data/billy.txt";
 
     /**
      * Reads the file and initializes the tasks list.
