@@ -1,9 +1,10 @@
 .label {
     -fx-background-color: orange;
-    -fx-border-color: #000000 #000000 #000000 #000000;
+    -fx-border-color: #504b42;
     -fx-border-width: 3px;
     -fx-background-radius: 1em 1em 0 1em;
     -fx-border-radius: 1em 1em 0 1em;
+    -fx-font: bold 12px "Helvetica";
 }
 
 .reply-label {
