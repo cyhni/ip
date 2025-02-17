@@ -1,8 +1,7 @@
 T | 1 | task1
-T | 1 | read book
 T | 0 | read book
 T | 1 | task1
-T | 0 | task2
+T | 1 | task2
 T | 0 | task1
 T | 0 | task2
 T | 0 | read book
