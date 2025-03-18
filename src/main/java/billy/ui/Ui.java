@@ -24,15 +24,6 @@ public class Ui {
                 DesignConstants.HORIZONTALLINE_STRING);
     }
 
-    // /**
-    //  * Reads the command from the user.
-    //  *
-    //  * @return The command entered by the user.
-    //  */
-    // public final String readCommand() {
-    //     System.out.print("Enter your command: ");
-    // }
-
     /**
      * Prints the goodbye message.
      *
