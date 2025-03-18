@@ -94,7 +94,8 @@ public class Parser {
     private static Command parseMark(String[] commandStrings, TasksList tasksList) throws BillyException {
         if (commandStrings.length == 1) {
             throw new BillyFieldErrorException("mark");
-        } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()) {
+        } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()
+                || Integer.parseInt(commandStrings[1]) < 1) {
             throw new BillyUnkownTaskNumException(commandStrings[1]);
         }
 
@@ -104,7 +105,8 @@ public class Parser {
     private static Command parseUnmark(String[] commandStrings, TasksList tasksList) throws BillyException {
         if (commandStrings.length == 1) {
             throw new BillyFieldErrorException("unmark");
-        } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()) {
+        } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()
+                || Integer.parseInt(commandStrings[1]) < 1) {
             throw new BillyUnkownTaskNumException(commandStrings[1]);
         }
 
@@ -173,7 +175,8 @@ public class Parser {
     private static Command parseDelete(String[] commandStrings, TasksList tasksList) throws BillyException {
         if (commandStrings.length == 1) {
             throw new BillyFieldErrorException("delete");
-        } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()) {
+        } else if (Integer.parseInt(commandStrings[1]) > tasksList.getSize()
+                || Integer.parseInt(commandStrings[1]) < 1) {
             throw new BillyUnkownTaskNumException(commandStrings[1]);
         }
 
